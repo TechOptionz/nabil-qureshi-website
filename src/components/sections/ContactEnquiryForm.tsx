@@ -132,11 +132,8 @@ export function ContactEnquiryForm({ initialTopic }: { initialTopic: string }) {
 
     /*
       Honeypot tripped: acknowledge it exactly as a success so the script
-      learns nothing, and send nothing.
-
-      TODO(launch): repeat this check inside `/api/contact`. A trap that only
-      runs in the browser does nothing against a bot that POSTs to the
-      endpoint directly.
+      learns nothing, and send nothing. `/api/contact` checks the same field
+      again, for a bot that POSTs to the endpoint without driving the form.
     */
     if (values.website) {
       setStatus("sent");
@@ -146,11 +143,10 @@ export function ContactEnquiryForm({ initialTopic }: { initialTopic: string }) {
     setStatus("sending");
     try {
       /*
-        `/api/contact` is stubbed: it validates the payload and then only logs
-        it. TODO(launch): that route still has to forward the enquiry to
-        Nabil's inbox or CRM — see the TODO in `src/app/api/contact/route.ts`.
-        It currently ignores `company` and `consent`; both need storing with
-        the enquiry once a real destination exists.
+        `/api/contact` files the enquiry as a Lead in Aleesa, carrying every
+        field below — see `src/lib/chat/aleesa-leads.ts`. Without
+        ALEESA_WEBSITE_FORM_API_KEY set it falls back to a server-side log,
+        which is enough to exercise the flow but not to launch on.
       */
       const response = await fetch("/api/contact", {
         method: "POST",

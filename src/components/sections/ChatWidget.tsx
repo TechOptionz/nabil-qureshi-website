@@ -6,6 +6,29 @@ import { Button } from "@/components/ui/Button";
 
 type Message = { role: "user" | "assistant"; text: string };
 
+const SESSION_KEY = "nq_chat_session_id";
+
+/**
+ * A stable id for this visitor's conversation, reused across page loads.
+ *
+ * The Aleesa provider keys the transcript and the inbox thread on it, so a
+ * fresh id every turn would leave the bot with no memory and scatter one
+ * conversation across many threads. Providers that hold no state — the
+ * Anthropic fallback — ignore it.
+ */
+function getSessionId(): string {
+  try {
+    const existing = window.localStorage.getItem(SESSION_KEY);
+    if (existing) return existing;
+    const created = `chat_${crypto.randomUUID()}`;
+    window.localStorage.setItem(SESSION_KEY, created);
+    return created;
+  } catch {
+    // Private mode / storage disabled: still usable, just not across reloads.
+    return `chat_${crypto.randomUUID()}`;
+  }
+}
+
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
@@ -13,6 +36,9 @@ export function ChatWidget() {
   const [busy, setBusy] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Minted lazily, on the first turn: reading localStorage during render
+  // would not match the server-rendered markup.
+  const sessionIdRef = useRef("");
 
   useEffect(() => {
     if (open) inputRef.current?.focus();
@@ -45,7 +71,14 @@ export function ChatWidget() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: history }),
+        body: JSON.stringify({
+          messages: history,
+          // Both are only read by the Aleesa provider: the session id keeps
+          // the conversation in one inbox thread, the path tells whoever
+          // picks it up which page the question was asked from.
+          sessionId: (sessionIdRef.current ||= getSessionId()),
+          page: window.location.pathname,
+        }),
       });
       if (!response.ok) throw new Error("Chat request failed");
       const data: { reply?: string } = await response.json();

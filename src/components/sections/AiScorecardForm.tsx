@@ -9,17 +9,21 @@ const { resource } = businessAi;
 type Status = "idle" | "sending" | "done" | "error";
 
 /**
- * Stubbed delivery. Nothing is sent and nothing is stored: the request is
- * acknowledged locally so the form's states can be exercised before launch.
+ * Files the request as a Lead in Aleesa, tagged `ai-scorecard` so it is
+ * distinguishable from a plain newsletter signup. Throwing is what drives the
+ * error state below.
  *
- * TODO(launch): replace with the real email provider — POST the address to
- * Mailchimp / ConvertKit / Beehiiv (as `/api/newsletter` will be wired) and
- * have it deliver the "Small Business AI Readiness Scorecard". Throwing from
- * here is what drives the error state, so surface the provider's failures.
+ * TODO(launch): the scorecard itself still has to be *sent*. Either add an
+ * Aleesa automation on the `ai-readiness-scorecard` form, or attach the email
+ * provider — see `src/app/api/newsletter/route.ts`.
  */
 async function requestScorecard(email: string): Promise<void> {
-  console.info("[ai-scorecard] request", { email: email.slice(0, 200) });
-  await new Promise((resolve) => setTimeout(resolve, 700));
+  const response = await fetch("/api/newsletter", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, source: "ai-scorecard" }),
+  });
+  if (!response.ok) throw new Error("Request failed");
 }
 
 /**

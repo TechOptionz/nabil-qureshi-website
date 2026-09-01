@@ -7,19 +7,22 @@ import { Button } from "@/components/ui/Button";
 type Status = "idle" | "sending" | "done" | "error";
 
 /**
- * Stubbed delivery handler — nothing is stored and no planner is sent.
+ * Files the request as a Lead in Aleesa, tagged `wellness-planner` so it is
+ * distinguishable from a plain newsletter signup. Throwing is what drives the
+ * error state below.
  *
- * TODO(launch): connect the real email provider (Mailchimp / ConvertKit /
- * Beehiiv, whichever the newsletter ends up on). It needs to POST the address
- * to that provider, tag the subscriber for the wellness list, and trigger the
- * automation that emails the planner PDF. Reject on a non-2xx response so the
- * error branch below stays reachable. The planner file itself is still
- * outstanding — see `wellness.resource.asset` in `src/content/site.ts`.
+ * TODO(launch): the planner itself still has to be *sent*, and the file is
+ * still outstanding — see `wellness.resource.asset` in `src/content/site.ts`.
+ * Once it exists, either add an Aleesa automation on the `wellness-planner`
+ * form or attach the email provider — see `src/app/api/newsletter/route.ts`.
  */
 async function requestPlanner(email: string): Promise<void> {
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new Error("Invalid email address.");
-  }
+  const response = await fetch("/api/newsletter", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, source: "wellness-planner" }),
+  });
+  if (!response.ok) throw new Error("Request failed");
 }
 
 /**

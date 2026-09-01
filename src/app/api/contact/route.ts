@@ -1,38 +1,54 @@
 import { NextResponse } from "next/server";
+import { deliverLead } from "@/lib/chat/leads";
+import {
+  MAX_BRIEF_LENGTH,
+  MAX_EMAIL_LENGTH,
+  MAX_NAME_LENGTH,
+} from "@/lib/chat/types";
+import { isValidEmail } from "@/lib/chat/validate";
 
 export const runtime = "nodejs";
 
 type ContactPayload = {
   name: string;
   email: string;
-  topic: string;
+  company?: string;
+  topic?: string;
   message: string;
+  consent: boolean;
 };
+
+function text(value: unknown, max: number): string {
+  return typeof value === "string" ? value.trim().slice(0, max) : "";
+}
 
 function parse(body: unknown): ContactPayload | null {
   if (typeof body !== "object" || body === null) return null;
   const raw = body as Record<string, unknown>;
 
-  const name = typeof raw.name === "string" ? raw.name.trim() : "";
-  const email = typeof raw.email === "string" ? raw.email.trim() : "";
-  const topic = typeof raw.topic === "string" ? raw.topic.trim() : "";
-  const message = typeof raw.message === "string" ? raw.message.trim() : "";
+  const name = text(raw.name, MAX_NAME_LENGTH);
+  const email = text(raw.email, MAX_EMAIL_LENGTH);
+  const message = text(raw.message, MAX_BRIEF_LENGTH);
 
   if (!name || !message) return null;
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null;
+  if (!isValidEmail(email)) return null;
 
   return {
-    name: name.slice(0, 120),
-    email: email.slice(0, 200),
-    topic: topic.slice(0, 200),
-    message: message.slice(0, 4000),
+    name,
+    email,
+    company: text(raw.company, MAX_NAME_LENGTH) || undefined,
+    topic: text(raw.topic, MAX_EMAIL_LENGTH) || undefined,
+    message,
+    consent: raw.consent === true,
   };
 }
 
 /**
- * Accepts and validates the enquiry. Delivery is intentionally not wired up:
- * plug in the real destination (CRM, transactional email, or a database) where
- * marked before launch — until then the submission is logged server-side only.
+ * Accepts the enquiry and files it as a Lead in Aleesa (see lib/chat/leads).
+ *
+ * The browser-side honeypot in ContactEnquiryForm only stops a bot that
+ * drives the form; one that POSTs here directly never sees it, so the same
+ * trap is checked again below.
  */
 export async function POST(request: Request) {
   let body: unknown;
@@ -40,6 +56,12 @@ export async function POST(request: Request) {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
+  // Honeypot tripped. Answer exactly as a success so the script learns
+  // nothing, and file nothing.
+  if (text((body as Record<string, unknown>)?.website, 1)) {
+    return NextResponse.json({ ok: true });
   }
 
   const payload = parse(body);
@@ -50,13 +72,15 @@ export async function POST(request: Request) {
     );
   }
 
-  // TODO(launch): forward to Nabil's inbox / CRM instead of logging.
-  console.info("[contact] enquiry received", {
-    name: payload.name,
-    email: payload.email,
-    topic: payload.topic,
-    length: payload.message.length,
-  });
+  try {
+    await deliverLead({ ...payload, source: "contact-form", transcript: [] });
+  } catch (error) {
+    console.error("[contact] delivery failed", error);
+    return NextResponse.json(
+      { error: "Could not send that through. Please try again." },
+      { status: 502 },
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }

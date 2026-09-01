@@ -21,7 +21,9 @@ export function Newsletter() {
       const response = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        // `source` is what separates this from the three resource forms,
+        // which post to the same route.
+        body: JSON.stringify({ email, source: "newsletter" }),
       });
       setStatus(response.ok ? "done" : "error");
     } catch {
