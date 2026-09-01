@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+@theme {
+  /* Dark surfaces */
+  --color-ink: #14171c;
+  --color-ink-raised: #1a1e24;
+  --color-ink-deep: #101318;
+  --color-line: #262b33;
+  --color-line-soft: #2a2f37;
+  --color-line-input: #33383f;
+
+  /* Accent */
+  --color-gold: #d3a95e;
+  --color-gold-light: #e6c284;
+  --color-gold-dark: #a97f35;
+
+  /* Text/border colours that were previously inline literals */
+  --color-ink-on-gold: #1a1e24;
+  --color-wordmark: #f3f0e9;
+  --color-line-outline: #4a505a;
+
+  /* Light surfaces */
+  --color-cream: #f3efe7;
+  --color-cream-deep: #e9e3d6;
+  --color-cream-line: #d9d1bf;
+
+  /*
+   * Type on dark. The four secondary tones were each lifted one step in
+   * 2026-08 — the page read too light overall, and `faint` was a genuine
+   * accessibility failure at 2.97:1 on `--color-ink`. All four now clear
+   * WCAG AA for normal text: muted 9.69:1, body-soft 12.30:1, dim 6.34:1,
+   * faint 5.79:1. `heading` and `body` are unchanged.
+   */
+  --color-heading: #f6f3ec;
+  --color-body: #e9e6df;
+  --color-body-soft: #d5d9de;
+  --color-muted: #c2c7ce;
+  --color-dim: #9ea4ae;
+  --color-faint: #939aa3;
+
+  /* Type on light */
+  --color-ink-text: #23262b;
+  --color-ink-body: #414650;
+  --color-ink-strong: #33373e;
+  --color-ink-muted: #8a8471;
+
+  --font-sans: var(--font-work-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-libre-caslon), ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --container-shell: 1180px;
+
+  /*
+   * Standalone pages collapse their two-column bands here (900px). Declared as
+   * a real breakpoint rather than an arbitrary `min-[900px]:` variant, and in
+   * `rem` to match the built-in scale: Tailwind orders breakpoints by value
+   * and cannot compare px against rem, so a `900px` literal is emitted ahead
+   * of `sm` and loses the cascade to it.
+   */
+  --breakpoint-band: 56.25rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-gold);
+    color: var(--color-ink-raised);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+}
+
+@utility shell {
+  width: 100%;
+  max-width: var(--container-shell);
+  margin-inline: auto;
+  padding-inline: 1.75rem;
+}
+
+@utility eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/*
+ * Body-text roles.
+ *
+ * Six utilities covering every non-heading size on the site. Headings keep the
+ * serif at 400 and are deliberately excluded.
+ *
+ * Each utility owns its `line-height`, so a converted element should not also
+ * carry a `leading-*` class: custom `@utility` rules sort after core utilities
+ * in the emitted stylesheet, so `text-copy` would win over `leading-relaxed`
+ * anyway and the leftover class would just be misleading.
+ *
+ * Weight runs 430 → 500 as size drops: running copy wants a touch more than
+ * 400 without the heaviness of 500, while small UI text needs the extra
+ * weight to hold up. 430 depends on Work Sans loading as a variable font
+ * (see layout.tsx); if that axis is ever dropped, 430/450 round to 400 and
+ * the fallback is paragraphs at 400 with everything under 16px at 500.
+ */
+@utility text-lede {
+  font-size: 1.1875rem; /* 19px — page ledes */
+  line-height: 1.6;
+  font-weight: 430;
+}
+
+@utility text-copy {
+  font-size: 1.0625rem; /* 17px — paragraphs */
+  line-height: 1.7;
+  font-weight: 430;
+}
+
+@utility text-copy-sm {
+  font-size: 1rem; /* 16px — cards, lists */
+  line-height: 1.65;
+  font-weight: 450;
+}
+
+@utility text-ui {
+  font-size: 0.9375rem; /* 15px — nav, links, buttons */
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+@utility text-meta {
+  font-size: 0.875rem; /* 14px — tags, meta */
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+@utility text-caption {
+  font-size: 0.8125rem; /* 13px — microcopy, legal */
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.9s ease both;
+}
+
+/* Progressive reveal driven by Reveal.tsx */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .animate-fade-up {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
