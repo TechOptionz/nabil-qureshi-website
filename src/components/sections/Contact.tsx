@@ -108,7 +108,7 @@ export function Contact() {
                   id="contact-topic"
                   name="topic"
                   defaultValue={contact.enquiryTypes[0]}
-                  className={field}
+                  className={`${field} select-field pr-11`}
                 >
                   {contact.enquiryTypes.map((type) => (
                     <option key={type} value={type}>

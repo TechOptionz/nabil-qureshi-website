@@ -41,8 +41,13 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: site.shortName }],
   icons: {
+    /*
+     * The .ico carries pixel-tuned 16/32/48 rasters for legacy browsers and
+     * bookmark bars; it declares concrete sizes rather than `any` so modern
+     * browsers prefer the scalable SVG instead of the low-res bitmap.
+     */
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
       { url: "/favicon.svg", type: "image/svg+xml" },
     ],
     apple: "/apple-touch-icon.png",

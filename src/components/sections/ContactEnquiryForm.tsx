@@ -278,7 +278,7 @@ export function ContactEnquiryForm({ initialTopic }: { initialTopic: string }) {
           onBlur={() => onBlur("topic")}
           aria-invalid={errors.topic ? true : undefined}
           aria-describedby={errors.topic ? "enquiry-topic-error" : undefined}
-          className={`${control} ${borderFor(Boolean(errors.topic))}`}
+          className={`${control} select-field pr-11 ${borderFor(Boolean(errors.topic))}`}
         >
           {contact.enquiryTypes.map((type) => (
             <option key={type} value={type}>

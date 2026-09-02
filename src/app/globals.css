@@ -160,6 +160,31 @@
   font-weight: 500;
 }
 
+/*
+ * Native select arrows are painted by the platform in a dark grey that all but
+ * disappears against `--color-ink`, so the control drops its native appearance
+ * and carries its own chevron — the same trade the consent checkbox in
+ * ContactEnquiryForm.tsx makes, for the same reason.
+ *
+ * A select cannot host the checkbox's `::before` glyph (browsers do not render
+ * pseudo-elements on replaced form controls), so the chevron arrives as a
+ * background image instead. That is also why the stroke repeats `--color-gold`
+ * as a literal: a `data:` URI is an opaque string to the CSS parser and cannot
+ * read a custom property. Keep the two in step if the accent ever changes.
+ *
+ * The room the chevron needs is NOT reserved here: the shared field class sets
+ * `px-4`, whose `padding-inline` shorthand is emitted after this rule and would
+ * reset the right side back to 1rem. Each select carries `pr-11` instead, which
+ * Tailwind sorts after `px-*` for exactly this reason.
+ */
+@utility select-field {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%23d3a95e' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px 8px;
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;

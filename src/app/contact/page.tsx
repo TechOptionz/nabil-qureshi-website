@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import { contactPage, site } from "@/content/site";
+import { contact, contactPage, site } from "@/content/site";
 import { AnnouncementBar } from "@/components/sections/AnnouncementBar";
 import { ChatWidget } from "@/components/sections/ChatWidget";
 import { ContactEnquiryForm } from "@/components/sections/ContactEnquiryForm";
 import { SiteFooter } from "@/components/sections/SiteFooter";
 import { SiteNav } from "@/components/sections/SiteNav";
 import { Reveal } from "@/components/ui/Reveal";
+import { PageHero } from "@/components/ui/PageHero";
 import { Heading, Section } from "@/components/ui/Section";
 
 const { title, description, ogImage } = contactPage.meta;
@@ -74,17 +74,19 @@ export default async function ContactPage(props: PageProps<"/contact">) {
       <SiteNav />
 
       <main className="flex-1">
-        {/* 1 — Full-Bleed Artwork Hero (Covers the entire hero section edge-to-edge) */}
-        <header className="relative w-full h-[50svh] sm:h-[62svh] lg:h-[75svh] min-h-[420px] max-h-[780px] overflow-hidden bg-ink">
-          <Image
-            src="/media/contact_bg_art.webp"
-            alt="Inspirational I AM art mural"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-        </header>
+        {/* 1 — Hero */}
+        <PageHero
+          eyebrow={contact.eyebrow}
+          heading={contact.heading}
+          lede={contact.body}
+          image={{
+            src: "/media/hero/hero_contact.webp",
+            blurDataURL: "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAACwAQCdASoKAAYAA4BaJZwAAlr0j4joAMyZI3teNhuqBf90siKr9ps0Lx/pfKsz1bJhi/80q9uE7LOBAAA=",
+            alt: "Sunlit city-view workspace with a laptop on a window bar",
+            objectPosition: "center 45%",
+            tone: "bright",
+          }}
+        />
 
         {/* 2 — Tell Me About It / Enquiry Form Section */}
         <Section id="enquiry" tone="cream" divide="top">

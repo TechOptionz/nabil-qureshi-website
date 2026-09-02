@@ -1,7 +1,21 @@
-
-<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="6" fill="#14171c"/>
-  <text x="16" y="22" font-family="Georgia, serif" font-size="14" font-weight="normal" fill="#f6f3ec" text-anchor="middle">
-    N<tspan fill="#d3a95e">.</tspan>
-  </text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Nabil Qureshi">
+  <defs>
+    <radialGradient id="nq-glow" cx="0.78" cy="0.18" r="0.8">
+      <stop offset="0" stop-color="#d3a95e" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#d3a95e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="32" height="32" rx="6.5" fill="#14171c"/>
+  <rect width="32" height="32" rx="6.5" fill="url(#nq-glow)"/>
+  <rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="none" stroke="#d3a95e" stroke-opacity="0.2"/>
+  <g fill="#f6f3ec">
+    <path d="M7.405 9.5h3.06l9.54 12.6h-3.06z"/>
+    <rect x="7.405" y="9.5" width="1.8" height="12.6"/>
+    <rect x="18.205" y="9.5" width="1.8" height="12.6"/>
+    <rect x="5.785" y="9.5" width="5.04" height="1.44"/>
+    <rect x="5.785" y="20.66" width="5.04" height="1.44"/>
+    <rect x="16.585" y="9.5" width="5.04" height="1.44"/>
+    <rect x="16.585" y="20.66" width="5.04" height="1.44"/>
+  </g>
+  <circle cx="24.505" cy="20.39" r="1.71" fill="#d3a95e"/>
 </svg>
