@@ -8,6 +8,8 @@ import { SiteNav } from "@/components/sections/SiteNav";
 import { Reveal } from "@/components/ui/Reveal";
 import { PageHero } from "@/components/ui/PageHero";
 import { Heading, Section } from "@/components/ui/Section";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { pageGraph } from "@/lib/seo/jsonld";
 
 const { title, description, ogImage } = contactPage.meta;
 
@@ -19,6 +21,7 @@ export const metadata: Metadata = {
     type: "website",
     url: `${site.url}/contact`,
     siteName: site.name,
+    locale: "en_AU",
     title,
     description,
     images: [
@@ -38,25 +41,25 @@ export const metadata: Metadata = {
   },
 };
 
-const contactPageJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ContactPage",
-  "@id": `${site.url}/contact#contactpage`,
-  url: `${site.url}/contact`,
+/*
+ * The hand-rolled node this replaces referenced `#person` and an inline
+ * `WebSite`, neither of which was declared on this route — both dangled. The
+ * shared graph declares them once in the root layout, so the references
+ * resolve here.
+ *
+ * No `ContactPoint` is emitted: the page publishes no phone number or email
+ * address, only a form, and inventing one is exactly the kind of claim that
+ * earns a structured-data manual action.
+ */
+const graph = pageGraph({
+  path: "/contact",
+  type: "ContactPage",
   name: title,
   description,
-  inLanguage: "en",
-  isPartOf: {
-    "@type": "WebSite",
-    name: site.name,
-    url: site.url,
-  },
-  about: {
-    "@type": "Person",
-    "@id": `${site.url}/#person`,
-    name: site.shortName,
-  },
-};
+  image: ogImage,
+  trail: [{ name: "Contact", path: "/contact" }],
+  mentions: contact.services.map((service) => service.label),
+});
 
 function resolveTopic(raw: string | string[] | undefined): string {
   const value = Array.isArray(raw) ? raw[0] : raw;
@@ -146,10 +149,7 @@ export default async function ContactPage(props: PageProps<"/contact">) {
       <ChatWidget />
       <SiteFooter />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageJsonLd) }}
-      />
+      <JsonLd graph={graph} />
     </>
   );
 }

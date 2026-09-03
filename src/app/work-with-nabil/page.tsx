@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { Eyebrow, Heading, Section } from "@/components/ui/Section";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { abs, PERSON_ID, pageGraph } from "@/lib/seo/jsonld";
 
 const { title, description, ogImage } = workWithNabil.meta;
 
@@ -22,11 +24,11 @@ export const metadata: Metadata = {
     type: "website",
     url: `${site.url}/work-with-nabil`,
     siteName: site.name,
+    locale: "en_AU",
     title,
     description,
     images: [
       {
-        // No artwork exists yet — drop a 1200x630 file at this path.
         url: ogImage,
         width: 1200,
         height: 630,
@@ -41,6 +43,48 @@ export const metadata: Metadata = {
     images: [ogImage],
   },
 };
+
+/*
+ * This is the page that answers "what does Nabil actually do", so it carries
+ * the only `Service` node on the site. The catalogue mirrors the three
+ * pathway cards exactly — name and description are the card's own `title` and
+ * `body`, nothing more.
+ *
+ * Deliberately absent: `offers`, `priceRange` and any `areaServed` beyond what
+ * the page states. Scope, fit and shape of each engagement are still visible
+ * PLACEHOLDERs on the page, and schema may not answer what the page does not.
+ */
+const serviceJsonLd = {
+  "@type": "Service",
+  "@id": `${abs("/work-with-nabil")}#service`,
+  name: workWithNabil.meta.title,
+  description: workWithNabil.hero.lede,
+  provider: { "@id": PERSON_ID },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: workWithNabil.pathways.cards.map((card) => card.title).join(", "),
+    itemListElement: workWithNabil.pathways.cards.map((card) => ({
+      "@type": "OfferCatalog",
+      name: card.title,
+      description: card.body,
+      url: abs(card.href),
+    })),
+  },
+};
+
+const graph = pageGraph({
+  path: "/work-with-nabil",
+  name: title,
+  description,
+  image: ogImage,
+  trail: [{ name: "Work With Nabil", path: "/work-with-nabil" }],
+  mentions: [
+    ...workWithNabil.pathways.cards.map((card) => card.title),
+    workWithNabil.process.heading,
+    ...workWithNabil.process.steps.map((step) => step.title),
+  ],
+  extra: [serviceJsonLd],
+});
 
 export default function WorkWithNabilPage() {
   return (
@@ -240,6 +284,7 @@ export default function WorkWithNabilPage() {
 
       <ChatWidget />
       <SiteFooter />
+      <JsonLd graph={graph} />
     </>
   );
 }

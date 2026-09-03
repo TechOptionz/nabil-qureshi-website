@@ -29,6 +29,8 @@ chat assistant. Without it the site works fully; the assistant returns a
 | `src/components/sections/` | One component per section of the page. |
 | `src/components/ui/` | `Section`/`Eyebrow`/`Heading` primitives, `MediaSlot`, `Reveal`. |
 | `src/app/api/` | `chat`, `contact`, `newsletter` route handlers. |
+| `src/lib/seo/jsonld.ts` | Shared `Person` / `WebSite` nodes and the `pageGraph()` builder every route's JSON-LD comes from. |
+| `src/app/sitemap.ts`, `robots.ts`, `manifest.ts`, `llms.txt/route.ts` | Crawl and answer-engine surface — all generated from `site.ts`. |
 
 Only five components are client components — `SiteNav`, `Insights`,
 `Newsletter`, `Contact`, `ChatWidget` and the `Reveal` wrapper. Everything else
@@ -74,10 +76,53 @@ a one-line change in `src/content/site.ts`:
 Until then those slots render as visibly labelled placeholders — nothing on the
 site claims a figure or quote that has not been supplied.
 
+## Search, answer engines and AI crawlers
+
+Everything below is generated from `src/content/site.ts`, so adding a page or
+changing a description updates all of it at once.
+
+| Route | What it does |
+| --- | --- |
+| `/robots.txt` | Allows everything but `/api/`, names the sitemap, and lists the AI crawlers explicitly. Editing `aiCrawlers` in `src/app/robots.ts` is the switch if the site should stop feeding a given assistant. |
+| `/sitemap.xml` | The nine indexable routes, each with its hero image through the Google image extension. **Add new routes to the `routes` array in `src/app/sitemap.ts`** — nothing discovers them automatically. |
+| `/llms.txt` | The [llmstxt.org](https://llmstxt.org) summary: every page, pillar topic, capability and speaking topic as plain text, with no nav or chrome for an assistant to wade through. |
+| `/manifest.webmanifest` | Name, description and theme colour for installed and app-surface contexts. |
+
+**Structured data.** One JSON-LD `@graph` per page, built by `pageGraph()` in
+`src/lib/seo/jsonld.ts`. The root layout declares the `Person` and `WebSite`
+nodes once; every page references them by `@id`, so a crawler resolves a single
+entity across the whole site. Pages add their own `WebPage`/`ProfilePage`/
+`ContactPage`/`CollectionPage` node, a `BreadcrumbList`, and where it applies a
+`Service` (`/work-with-nabil`) or `ItemList` of talks (`/speaking`).
+
+Two rules apply when extending it:
+
+1. **Schema may only assert what the page renders.** The career history in
+   `about.timeline` is still marked unverified, so no `worksFor`, `jobTitle` or
+   `alumniOf` is emitted; the `/speaking` formats band is still PLACEHOLDER
+   lengths and audiences, so it stays out too. Unsupported claims are what
+   earns a structured-data manual action.
+2. **`sameAs` takes real profile URLs only.** It is derived from the footer's
+   Follow column, filtered to absolute URLs — so replacing the `#` placeholders
+   there is all that is needed to add Instagram and YouTube to the entity.
+
+**Share cards** live in `public/og/` (1200x630, one per route) plus
+`public/og-image.jpg` for the home page, wired through each section's
+`meta.ogImage` in `site.ts`.
+
 ## Before launch
 
 - `src/app/api/contact/route.ts` and `src/app/api/newsletter/route.ts` validate
   input and return success, but only log server-side. Wire them to the real
   inbox/CRM and list provider at the `TODO(launch)` markers.
 - Set `site.url` in `src/content/site.ts` to the production origin.
-- Replace the footer's `#` social links with real profiles.
+- Replace the footer's `#` social links with real profiles. They feed the
+  `sameAs` in the Person schema and the `rel="me"` on each link, so the entity
+  stays thinner than it needs to be until they are set.
+- Submit `/sitemap.xml` in Google Search Console and Bing Webmaster Tools, and
+  add the verification token to `metadata.verification` in
+  `src/app/layout.tsx`.
+- `/contact` is server-rendered on every request because it reads
+  `?topic=` from `searchParams`. It is fully crawlable, but moving that read
+  into a `Suspense`-wrapped client component would let it prerender like the
+  other eight routes.

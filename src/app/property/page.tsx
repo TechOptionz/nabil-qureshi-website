@@ -11,6 +11,8 @@ import { MediaSlot } from "@/components/ui/MediaSlot";
 import { Reveal } from "@/components/ui/Reveal";
 import { PageHero } from "@/components/ui/PageHero";
 import { Eyebrow, Heading, Section } from "@/components/ui/Section";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { pageGraph } from "@/lib/seo/jsonld";
 
 const { title, description, ogImage } = property.meta;
 
@@ -24,11 +26,11 @@ export const metadata: Metadata = {
     type: "article",
     url: `${site.url}/property`,
     siteName: site.name,
+    locale: "en_AU",
     title,
     description,
     images: [
       {
-        // No artwork exists yet — drop a 1200x630 file at this path.
         url: ogImage,
         width: 1200,
         height: 630,
@@ -43,6 +45,20 @@ export const metadata: Metadata = {
     images: [ogImage],
   },
 };
+
+/*
+ * A topic hub, not an article: the page states its own scope in the
+ * "What I cover here" list, and `mentions` hands that same list to a crawler
+ * as structured terms rather than leaving it to infer them from bullets.
+ */
+const graph = pageGraph({
+  path: "/property",
+  name: title,
+  description,
+  image: ogImage,
+  trail: [{ name: "Property & Wealth", path: "/property" }],
+  mentions: [property.coverage.heading, ...property.coverage.topics],
+});
 
 /** The card box is shared verbatim with the home Insights grid. */
 const cardClass =
@@ -350,6 +366,7 @@ export default function PropertyPage() {
 
       <ChatWidget />
       <SiteFooter />
+      <JsonLd graph={graph} />
     </>
   );
 }

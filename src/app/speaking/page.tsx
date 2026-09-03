@@ -10,6 +10,8 @@ import { Reveal } from "@/components/ui/Reveal";
 import { PageHero } from "@/components/ui/PageHero";
 import { Eyebrow, Heading, Section } from "@/components/ui/Section";
 import { CopyBioButton } from "./CopyBioButton";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { abs, pageGraph } from "@/lib/seo/jsonld";
 
 const { title, description, ogImage } = speakingPage.meta;
 
@@ -23,11 +25,11 @@ export const metadata: Metadata = {
     type: "profile",
     url: `${site.url}/speaking`,
     siteName: site.name,
+    locale: "en_AU",
     title,
     description,
     images: [
       {
-        // No artwork exists yet — drop a 1200x630 file at this path.
         url: ogImage,
         width: 1200,
         height: 630,
@@ -42,6 +44,39 @@ export const metadata: Metadata = {
     images: [ogImage],
   },
 };
+
+/*
+ * The five talk titles are the page's most citable asset — they are what an
+ * event organiser or a podcast researcher actually searches for. They render
+ * as `<span>`s inside cards, so an `ItemList` is what makes them legible as a
+ * set rather than as loose text.
+ *
+ * The formats band is left out: every length and audience figure under it is
+ * still a visible PLACEHOLDER, and schema must not fill a gap the page shows.
+ */
+const talksJsonLd = {
+  "@type": "ItemList",
+  "@id": `${abs("/speaking")}#talks`,
+  name: speakingPage.showreel.heading,
+  itemListOrder: "ItemListOrderAscending",
+  numberOfItems: speakingPage.topics.items.length,
+  itemListElement: speakingPage.topics.items.map((topic, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: topic.title,
+  })),
+};
+
+const graph = pageGraph({
+  path: "/speaking",
+  type: "ProfilePage",
+  name: title,
+  description,
+  image: ogImage,
+  trail: [{ name: "Speaking & Media", path: "/speaking" }],
+  mentions: speakingPage.topics.items.map((topic) => topic.title),
+  extra: [talksJsonLd],
+});
 
 /** The card box is shared verbatim with the About pillar grid. */
 const cardClass =
@@ -288,6 +323,7 @@ export default function SpeakingPage() {
 
       <ChatWidget />
       <SiteFooter />
+      <JsonLd graph={graph} />
     </>
   );
 }

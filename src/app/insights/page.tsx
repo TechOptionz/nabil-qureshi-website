@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { insightsPage, site } from "@/content/site";
+import { articles, insightsPage, site } from "@/content/site";
 import { AnnouncementBar } from "@/components/sections/AnnouncementBar";
 import { ChatWidget } from "@/components/sections/ChatWidget";
 import { InsightsLibrary } from "@/components/sections/InsightsLibrary";
@@ -9,6 +9,8 @@ import { SiteNav } from "@/components/sections/SiteNav";
 import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { Heading, Section } from "@/components/ui/Section";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { pageGraph } from "@/lib/seo/jsonld";
 
 const { title, description, ogImage } = insightsPage.meta;
 
@@ -22,11 +24,11 @@ export const metadata: Metadata = {
     type: "website",
     url: `${site.url}/insights`,
     siteName: site.name,
+    locale: "en_AU",
     title,
     description,
     images: [
       {
-        // Placeholder path — no 1200x630 artwork exists for this page yet.
         url: ogImage,
         width: 1200,
         height: 630,
@@ -41,6 +43,26 @@ export const metadata: Metadata = {
     images: [ogImage],
   },
 };
+
+/*
+ * `CollectionPage` rather than `Blog`: every article in `articles` still has
+ * `href: null`, so there is nothing to emit as a `BlogPosting` — a
+ * `blogPost`/`ItemList` of URL-less entries would be an empty promise to a
+ * crawler. Swap this for a `Blog` node with real `BlogPosting` items once the
+ * articles have URLs.
+ *
+ * The titles are still handed over as `mentions`, which states what the
+ * library covers without claiming each one is a reachable document.
+ */
+const graph = pageGraph({
+  path: "/insights",
+  type: "CollectionPage",
+  name: title,
+  description,
+  image: ogImage,
+  trail: [{ name: "Insights", path: "/insights" }],
+  mentions: articles.map((article) => article.title),
+});
 
 /** Shared by the three format cards; the ink fill reads on the raised band. */
 const cardClass =
@@ -100,6 +122,7 @@ export default function InsightsPage() {
 
       <ChatWidget />
       <SiteFooter />
+      <JsonLd graph={graph} />
     </>
   );
 }

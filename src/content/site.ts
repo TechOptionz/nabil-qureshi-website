@@ -574,8 +574,8 @@ export const about = {
     title: "About Nabil Qureshi — Property, Business & AI, and Wellness",
     description:
       "Nabil is a business and property professional writing about wealth creation, business technology and AI, and the health and mindset behind sustainable performance.",
-    /** No artwork exists yet — drop a 1200x630 file here before launch. */
-    ogImage: "/media/og-about.jpg",
+    /** 1200x630 share card, shipped in public/og/. */
+    ogImage: "/og/about.jpg",
   },
 };
 
@@ -700,8 +700,8 @@ export const property = {
     title: "Property & Wealth — Nabil Qureshi",
     description:
       "Property can create long-term financial opportunity, but strong outcomes require more than buying an asset. They require research, financial discipline, risk awareness and a clear strategy.",
-    /** No artwork exists yet — drop a 1200x630 file here before launch. */
-    ogImage: "/media/og-property.jpg",
+    /** 1200x630 share card, shipped in public/og/. */
+    ogImage: "/og/property.jpg",
   },
 };
 
@@ -774,8 +774,8 @@ export const businessAi = {
     title: "Business, Technology & AI — Nabil Qureshi",
     description:
       "I share practical ideas about business systems, automation and AI — with a focus on useful outcomes rather than technology for its own sake.",
-    /** No artwork exists yet — drop a 1200x630 file here before launch. */
-    ogImage: "/media/og-business-ai.jpg",
+    /** 1200x630 share card, shipped in public/og/. */
+    ogImage: "/og/business-ai.jpg",
   },
 };
 
@@ -842,8 +842,8 @@ export const wellness = {
     title: "Health & Wellness — Nabil Qureshi",
     description:
       "Realistic perspectives on energy, discipline, resilience, balance and sustainable performance — because it is harder to show up fully for work, family and personal goals when health declines.",
-    /** No artwork exists yet — drop a 1200x630 file here before launch. */
-    ogImage: "/media/og-wellness.jpg",
+    /** 1200x630 share card, shipped in public/og/. */
+    ogImage: "/og/wellness.jpg",
   },
 };
 
@@ -905,8 +905,8 @@ export const insightsPage = {
   meta: {
     title: "Insights — Nabil Qureshi on Property, Business & AI, and Wellness",
     description: insights.body,
-    /** No artwork exists yet — drop a 1200x630 file here before launch. */
-    ogImage: "/media/og-insights.jpg",
+    /** 1200x630 share card, shipped in public/og/. */
+    ogImage: "/og/insights.jpg",
   },
 };
 
@@ -1050,8 +1050,8 @@ export const speakingPage = {
     title: "Speaking & Media — Nabil Qureshi",
     description:
       "Nabil speaks about the practical connection between wealth, technology and human performance — conversational, experience-led and useful for business audiences, property communities, podcasts and leadership events.",
-    /** No artwork exists yet — drop a 1200x630 file here before launch. */
-    ogImage: "/media/og-speaking.jpg",
+    /** 1200x630 share card, shipped in public/og/. */
+    ogImage: "/og/speaking.jpg",
   },
 };
 
@@ -1147,8 +1147,8 @@ export const contactPage = {
     /** The opening sentence of the hero lede, verbatim. */
     description:
       "Whether you are exploring a property opportunity, improving a business through technology, or looking for an experienced voice for your next event, start with a short conversation.",
-    /** No artwork exists yet — drop a 1200x630 file here before launch. */
-    ogImage: "/media/og-contact.jpg",
+    /** 1200x630 share card, shipped in public/og/. */
+    ogImage: "/og/contact.jpg",
   },
 };
 
@@ -1293,7 +1293,7 @@ export const workWithNabil = {
     /** The hero lede, verbatim. */
     description:
       "Whether you are exploring a property opportunity, improving a business through technology, or looking for an experienced voice for your next event, start with a short conversation.",
-    /** No artwork exists yet — drop a 1200x630 file here before launch. */
-    ogImage: "/media/og-work-with-nabil.jpg",
+    /** 1200x630 share card, shipped in public/og/. */
+    ogImage: "/og/work-with-nabil.jpg",
   },
 };

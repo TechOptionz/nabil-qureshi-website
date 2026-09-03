@@ -10,7 +10,8 @@ type MediaSlotProps = {
   kind?: "image" | "video";
   /** Larger play glyph for the hero-sized video slot. */
   size?: "sm" | "md" | "lg";
-  priority?: boolean;
+  /** Loads the image eagerly at high priority — for an LCP candidate. */
+  eager?: boolean;
   sizes?: string;
 };
 
@@ -27,7 +28,7 @@ export function MediaSlot({
   className = "",
   kind = "image",
   size = "md",
-  priority = false,
+  eager = false,
   sizes = "(max-width: 900px) 100vw, 50vw",
 }: MediaSlotProps) {
   if (src) {
@@ -38,7 +39,8 @@ export function MediaSlot({
           alt={alt}
           fill
           sizes={sizes}
-          priority={priority}
+          loading={eager ? "eager" : "lazy"}
+          fetchPriority={eager ? "high" : "auto"}
           className="object-cover"
         />
       </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
@@ -102,9 +103,47 @@ export function Button({
     .join(" ");
 
   if (typeof rest.href === "string") {
+    /* `rest.href` carries the narrowing; `anchorProps.href` would not. */
+    const href = rest.href;
     const anchorProps = rest as AnchorHTMLAttributes<HTMLAnchorElement>;
+
+    /*
+     * Internal routes go through `next/link`, external ones and in-page
+     * anchors stay a plain `<a>`.
+     *
+     * Every primary conversion path on the site is a `Button` — the hero
+     * CTAs, "Start a Conversation", "Work With Nabil" — so routing them
+     * through a bare `<a>` meant a full document reload and no prefetch on
+     * exactly the journeys that matter most. Both halves of that cost the
+     * page's interaction metrics, which feed ranking.
+     *
+     * An in-page `#anchor` is excluded deliberately: `next/link` would treat
+     * it as a route and interfere with the nav's scroll-spy.
+     */
+    const isInternalRoute = href.startsWith("/");
+
+    if (isInternalRoute) {
+      return (
+        <Link {...anchorProps} href={href} className={classes}>
+          {children}
+        </Link>
+      );
+    }
+
     return (
-      <a {...anchorProps} className={classes}>
+      <a
+        {...anchorProps}
+        /*
+          A target-less external link needs no `rel` for security, but
+          `noopener` costs nothing and keeps the pattern uniform.
+        */
+        rel={
+          href.startsWith("http")
+            ? (anchorProps.rel ?? "noopener")
+            : anchorProps.rel
+        }
+        className={classes}
+      >
         {children}
       </a>
     );

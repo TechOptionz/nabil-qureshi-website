@@ -1,4 +1,7 @@
-import { pillars } from "@/content/site";
+import type { Metadata } from "next";
+import { insights, pillars, site, speaking } from "@/content/site";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { pageGraph } from "@/lib/seo/jsonld";
 import { AnnouncementBar } from "@/components/sections/AnnouncementBar";
 import { ChatWidget } from "@/components/sections/ChatWidget";
 import { Contact } from "@/components/sections/Contact";
@@ -14,6 +17,36 @@ import { SiteNav } from "@/components/sections/SiteNav";
 import { Speaking } from "@/components/sections/Speaking";
 import { Story } from "@/components/sections/Story";
 import { Testimonials } from "@/components/sections/Testimonials";
+
+/*
+ * The root layout supplies the title, description, Open Graph and Twitter
+ * cards for this route already. Only the self-canonical is missing there —
+ * declaring it in the layout would hand every page that did not override it
+ * the same "/" canonical, including the 404.
+ */
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+/*
+ * The home page is the site's hub: it carries every pillar, the insight
+ * grid, the speaking band and the contact band. `mentions` lists what it
+ * actually covers, drawn verbatim from the headings already rendered below,
+ * so an answer engine can read the page's scope without inferring it from
+ * layout.
+ */
+const graph = pageGraph({
+  path: "/",
+  name: `${site.shortName} — Property, Business & AI, Wellness`,
+  description: site.description,
+  image: "/og-image.jpg",
+  mentions: [
+    ...pillars.map((pillar) => pillar.eyebrow.split("— ")[1] ?? pillar.eyebrow),
+    ...pillars.flatMap((pillar) => pillar.points),
+    insights.heading,
+    speaking.heading,
+  ],
+});
 
 export default function Home() {
   return (
@@ -41,6 +74,7 @@ export default function Home() {
 
       <ChatWidget />
       <SiteFooter />
+      <JsonLd graph={graph} />
     </>
   );
 }

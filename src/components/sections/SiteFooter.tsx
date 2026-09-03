@@ -17,7 +17,17 @@ export function SiteFooter() {
         </div>
 
         {footer.columns.map((column) => (
-          <nav key={column.title} className="flex flex-col gap-3">
+          /*
+            Four <nav> landmarks share this page with the header nav, so each
+            needs its own accessible name — otherwise assistive tech and the
+            outline extractors that answer engines run announce four
+            indistinguishable "navigation" regions.
+          */
+          <nav
+            key={column.title}
+            aria-label={column.title}
+            className="flex flex-col gap-3"
+          >
             <p className="mb-1 text-caption tracking-[0.18em] text-dim uppercase">
               {column.title}
             </p>
@@ -25,6 +35,14 @@ export function SiteFooter() {
               <Link
                 key={link.label}
                 href={link.href}
+                /*
+                  rel="me" on an off-site profile is the link half of the
+                  `sameAs` in the Person schema: together they let a crawler
+                  confirm the profile and the site describe the same person,
+                  which is what an answer engine needs before it will
+                  attribute a claim. The `#` placeholders get nothing.
+                */
+                rel={link.href.startsWith("http") ? "me noopener" : undefined}
                 className="text-ui text-muted transition-colors hover:text-gold"
               >
                 {link.label}

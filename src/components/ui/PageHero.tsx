@@ -74,7 +74,13 @@ export function PageHero({
             src={image.src}
             alt={image.alt}
             fill
-            priority
+            /*
+              `priority` is deprecated in Next 16; this pair is what it
+              expanded to. The hero photograph is the LCP element on every
+              page that uses this component.
+            */
+            loading="eager"
+            fetchPriority="high"
             sizes="100vw"
             placeholder={image.blurDataURL ? "blur" : "empty"}
             blurDataURL={image.blurDataURL}

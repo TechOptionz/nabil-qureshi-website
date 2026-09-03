@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Libre_Caslon_Text, Work_Sans } from "next/font/google";
 import { site } from "@/content/site";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { personNode, webSiteNode } from "@/lib/seo/jsonld";
 import "./globals.css";
 
 const libreCaslon = Libre_Caslon_Text({
@@ -39,7 +41,16 @@ export const metadata: Metadata = {
     "speaking",
     "Nabil Qureshi",
   ],
-  authors: [{ name: site.shortName }],
+  authors: [{ name: site.shortName, url: `${site.url}/about` }],
+  creator: site.shortName,
+  publisher: site.shortName,
+  applicationName: site.name,
+  category: "Business",
+  /*
+   * Telephone auto-detection rewrites plain numbers into `tel:` anchors on
+   * iOS, which injects markup the crawler sees but the source does not.
+   */
+  formatDetection: { telephone: false, address: false, email: false },
   icons: {
     /*
      * The .ico carries pixel-tuned 16/32/48 rasters for legacy browsers and
@@ -56,6 +67,7 @@ export const metadata: Metadata = {
     type: "website",
     url: site.url,
     siteName: site.name,
+    locale: "en_AU",
     title: `${site.shortName} — Property, Business & AI, Wellness`,
     description: site.description,
     images: [
@@ -73,7 +85,26 @@ export const metadata: Metadata = {
     description: site.description,
     images: ["/og-image.jpg"],
   },
-  robots: { index: true, follow: true },
+  /*
+   * The `googleBot` block is the single most important answer-engine switch on
+   * the site. Without it Google caps text snippets at ~160 characters and
+   * image previews at a thumbnail, which is too little for a page to be quoted
+   * in an AI Overview or a rich result. `-1` lifts both caps.
+   *
+   * `notranslate` is deliberately absent: a translated snippet is still a
+   * citation.
+   */
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
 };
 
 export const viewport: Viewport = {
@@ -81,23 +112,10 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-const personJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: site.shortName,
-  url: site.url,
-  description: site.description,
-  knowsAbout: [
-    "Property and wealth creation",
-    "Business technology and AI",
-    "Health and wellness",
-  ],
-};
-
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="en-AU"
       className={`${libreCaslon.variable} ${workSans.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
@@ -108,10 +126,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         {children}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
-        />
+        {/*
+          The Person and WebSite nodes are declared once, here, and referenced
+          by `@id` from every page's own graph — so a crawler resolves one
+          entity across the whole site rather than one per URL.
+        */}
+        <JsonLd graph={[personNode, webSiteNode]} />
       </body>
     </html>
   );

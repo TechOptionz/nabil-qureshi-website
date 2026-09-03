@@ -132,7 +132,15 @@ export function Hero() {
                 src="/media/nabil_hero_glasses_portrait.png"
                 alt="Nabil Qureshi — Build wealth, build better businesses, build a better life"
                 fill
-                priority
+                /*
+                  `priority` is deprecated in Next 16. The pair below is what
+                  it expanded to and is what the upgrade guide points at:
+                  fetch it eagerly, at high priority. This is the LCP element
+                  on the route, so the hint is load-bearing for the Core Web
+                  Vitals that feed ranking.
+                */
+                loading="eager"
+                fetchPriority="high"
                 sizes="(min-width: 1280px) 70vw, (min-width: 1024px) 65vw, 100vw"
                 className="object-contain object-bottom filter brightness-[1.14] contrast-[1.02] drop-shadow-[0_25px_60px_rgba(0,0,0,0.95)] transition-all duration-500 hover:scale-[1.02]"
               />

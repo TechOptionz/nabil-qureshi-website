@@ -145,7 +145,14 @@ export function InteractiveShowcase() {
                         className={`object-cover transition-transform duration-700 ease-out ${
                           isActive ? "scale-100" : "scale-105"
                         }`}
-                        priority={index === 0}
+                        /*
+                          All six render; five sit at opacity-0 behind the
+                          active one. Only the first is an LCP candidate, so
+                          the rest defer rather than competing with it for
+                          bandwidth on first paint.
+                        */
+                        loading={index === 0 ? "eager" : "lazy"}
+                        fetchPriority={index === 0 ? "high" : "low"}
                       />
                     </div>
                   );

@@ -1,8 +1,22 @@
+import type { Metadata } from "next";
 import { AnnouncementBar } from "@/components/sections/AnnouncementBar";
 import { SiteFooter } from "@/components/sections/SiteFooter";
 import { SiteNav } from "@/components/sections/SiteNav";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow, Heading } from "@/components/ui/Section";
+
+/*
+ * The 404 already answers with a 404 status, which is what actually keeps it
+ * out of the index — but a soft-404 served from a cache or a proxy would
+ * otherwise inherit the site-wide title and canonical from the root layout
+ * and look like a real page. `noindex` closes that gap, and the explicit
+ * title stops "Nabil Qureshi — Property, Business & AI, Wellness" appearing
+ * over an error screen in a tab or a shared link.
+ */
+export const metadata: Metadata = {
+  title: { absolute: "Page Not Found — NabilQureshi.com" },
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (

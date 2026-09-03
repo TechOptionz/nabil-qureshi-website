@@ -11,6 +11,8 @@ import { MediaSlot } from "@/components/ui/MediaSlot";
 import { Reveal } from "@/components/ui/Reveal";
 import { PageHero } from "@/components/ui/PageHero";
 import { Eyebrow, Heading, Section } from "@/components/ui/Section";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { pageGraph } from "@/lib/seo/jsonld";
 
 const { title, description, ogImage } = about.meta;
 
@@ -24,6 +26,7 @@ export const metadata: Metadata = {
     type: "profile",
     url: `${site.url}/about`,
     siteName: site.name,
+    locale: "en_AU",
     title,
     description,
     images: [
@@ -44,28 +47,27 @@ export const metadata: Metadata = {
 };
 
 /*
-  Do not publish unverified affiliations. `sameAs` stays a visible placeholder
-  until Nabil's real profile URLs are supplied.
-*/
-const personJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "@id": `${site.url}/#person`,
-  name: site.shortName,
-  url: `${site.url}/about`,
-  mainEntityOfPage: `${site.url}/about`,
+ * `ProfilePage` is the type Google expects for the page that *is* the person,
+ * as opposed to a page that merely mentions them: it makes /about the node
+ * every other page's `about: { "@id": ... }` reference resolves to.
+ *
+ * The Person itself is declared once in the root layout, so nothing is
+ * redefined here. The career history in `about.timeline` stays out of schema
+ * until it is verified — see the note above it in src/content/site.ts.
+ */
+const graph = pageGraph({
+  path: "/about",
+  type: "ProfilePage",
+  name: title,
   description,
-  knowsAbout: [
-    "Property and wealth creation",
-    "Business technology and AI",
-    "Health and wellness",
+  image: about.portrait.src,
+  trail: [{ name: "About", path: "/about" }],
+  mentions: [
+    about.capabilities.heading,
+    ...about.capabilities.clusters.map((cluster) => cluster.category),
+    ...about.pillars.cards.map((card) => card.title),
   ],
-  sameAs: [
-    "[PLACEHOLDER: LinkedIn profile URL]",
-    "[PLACEHOLDER: Instagram profile URL]",
-    "[PLACEHOLDER: YouTube channel URL]",
-  ],
-};
+});
 
 export default function AboutPage() {
   return (
@@ -323,10 +325,7 @@ export default function AboutPage() {
       <ChatWidget />
       <SiteFooter />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
-      />
+      <JsonLd graph={graph} />
     </>
   );
 }
