@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
-import { articles, businessAi, insights, site } from "@/content/site";
+import {
+  articles,
+  businessAi,
+  insights,
+  site,
+  technologyPartner,
+} from "@/content/site";
 import { AiScorecardForm } from "@/components/sections/AiScorecardForm";
 import { AnnouncementBar } from "@/components/sections/AnnouncementBar";
 import { ChatWidget } from "@/components/sections/ChatWidget";
 import { SiteFooter } from "@/components/sections/SiteFooter";
 import { SiteNav } from "@/components/sections/SiteNav";
+import { TechnologyPartner } from "@/components/sections/TechnologyPartner";
 import { Button } from "@/components/ui/Button";
 import { MediaSlot } from "@/components/ui/MediaSlot";
 import { Reveal } from "@/components/ui/Reveal";
@@ -56,7 +63,12 @@ const graph = pageGraph({
   description,
   image: ogImage,
   trail: [{ name: "Business, Technology & AI", path: "/business-ai" }],
-  mentions: [businessAi.coverage.heading, ...businessAi.coverage.topics],
+  mentions: [
+    businessAi.coverage.heading,
+    ...businessAi.coverage.topics,
+    technologyPartner.heading,
+    ...technologyPartner.capabilities,
+  ],
 });
 
 /** The card box is shared verbatim with the home Insights grid. */
@@ -198,7 +210,10 @@ export default function BusinessAiPage() {
           </div>
         </Section>
 
-        {/* 4 — Free resource */}
+        {/* 4 — Technology partner */}
+        <TechnologyPartner />
+
+        {/* 5 — Free resource */}
         {/*
           The form is wired to a stub: nothing is delivered yet. See the
           TODO(launch) in AiScorecardForm before publishing this band.
@@ -219,7 +234,7 @@ export default function BusinessAiPage() {
           </div>
         </Section>
 
-        {/* 5 + 6 — Disclaimer and CTA share one band */}
+        {/* 6 + 7 — Disclaimer and CTA share one band */}
         <Section>
           <div className="shell py-24">
             <Reveal className="mx-auto max-w-[720px] text-center">

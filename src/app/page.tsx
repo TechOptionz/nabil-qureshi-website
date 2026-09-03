@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import { insights, pillars, site, speaking } from "@/content/site";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { pageGraph } from "@/lib/seo/jsonld";
@@ -16,6 +17,7 @@ import { SiteFooter } from "@/components/sections/SiteFooter";
 import { SiteNav } from "@/components/sections/SiteNav";
 import { Speaking } from "@/components/sections/Speaking";
 import { Story } from "@/components/sections/Story";
+import { TechnologyPartnerBanner } from "@/components/sections/TechnologyPartner";
 import { Testimonials } from "@/components/sections/Testimonials";
 
 /*
@@ -61,8 +63,16 @@ export default function Home() {
         <Story />
         <Credibility />
 
+        {/*
+          The technology-partner banner follows the Business & AI pillar
+          rather than sitting at a fixed index, so reordering `pillars` in
+          site.ts cannot strand it next to property or wellness.
+        */}
         {pillars.map((pillar) => (
-          <PillarSection key={pillar.id} pillar={pillar} />
+          <Fragment key={pillar.id}>
+            <PillarSection pillar={pillar} />
+            {pillar.id === "business" && <TechnologyPartnerBanner />}
+          </Fragment>
         ))}
 
         <Insights />

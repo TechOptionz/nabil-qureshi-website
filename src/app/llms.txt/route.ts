@@ -7,6 +7,7 @@ import {
   property,
   site,
   speakingPage,
+  technologyPartner,
   wellness,
   workWithNabil,
 } from "@/content/site";
@@ -79,6 +80,12 @@ ${about.capabilities.clusters
         .join("\n")}`,
   )
   .join("\n\n")}
+
+## Technology partner
+
+${technologyPartner.heading} ${technologyPartner.lede}
+
+${technologyPartner.disclaimer}
 
 ## Speaking topics
 

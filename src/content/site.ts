@@ -418,6 +418,112 @@ export const footer = {
 };
 
 /* ------------------------------------------------------------------ */
+/* Technology partner — shared by the home page and /business-ai       */
+/* ------------------------------------------------------------------ */
+
+/**
+ * KEYOB is an independent provider, not a service Nabil delivers. Every
+ * string below therefore keeps the two apart: Nabil writes and advises on
+ * business systems, KEYOB builds them, and `disclaimer` says so in plain
+ * words on the full section. Nothing here promises a discount or a price:
+ * the only rate language on the site is the home banner's "preferred client
+ * rate", and no figure is quoted anywhere.
+ */
+export const technologyPartner = {
+  /** Both bands link here, so the home banner can deep-link into the section. */
+  id: "technology-partner",
+  lockup: "Nabil Qureshi × KEYOB",
+  eyebrow: "Technology partner",
+
+  heading: "I write about business systems. KEYOB builds them.",
+  lede: "Most of what I cover here — automation, AI assistants, connected data — only pays off once someone actually builds it. KEYOB is an Australian software, AI and digital marketing team based in Springwood, and they are who I point people to for the delivery side of their business.",
+
+  /** KEYOB's three-part starting point, as they describe it. */
+  system: {
+    items: [
+      {
+        title: "Website",
+        body: "A site built to turn visitors into enquiries — not just to look tidy.",
+      },
+      {
+        title: "Aleesa.ai",
+        body: "An AI assistant that answers calls, emails and messages around the clock.",
+      },
+      {
+        title: "Connected CRM",
+        body: "One place where every lead and conversation is captured automatically.",
+      },
+    ],
+    note: "KEYOB call this the Digital Growth System — the foundation every client starts with.",
+  },
+
+  capabilities: [
+    "AI & Automation",
+    "Custom Software",
+    "Website Design",
+    "CRM Setup",
+    "System Integrations",
+    "ERP Systems",
+    "Dashboards & Reporting",
+    "Mobile Apps",
+    "Ongoing Support",
+  ],
+
+  benefits: [
+    {
+      title: "Stop losing enquiries",
+      body: "Every call, email and web enquiry answered and captured — including after hours and weekends.",
+    },
+    {
+      title: "Less manual admin",
+      body: "Automate the repetitive work your team is still doing by hand, and give those hours back.",
+    },
+    {
+      title: "Systems that talk to each other",
+      body: "Connect the tools you already use so information flows without anyone re-typing it.",
+    },
+    {
+      title: "Numbers you can trust",
+      body: "Clean, connected data means you and your accountant are always working from the same figures.",
+    },
+  ],
+
+  steps: ["Free chat", "They scope it", "They build it", "Ongoing support"],
+
+  cta: {
+    heading: "Ready to look at your systems?",
+    body: "Book a chat with KEYOB directly, or ask me for an introduction the next time we speak.",
+    primary: {
+      label: "Talk to KEYOB",
+      href: "https://www.keyob.com/contact#contact",
+    },
+    secondary: { label: "Visit keyob.com", href: "https://www.keyob.com" },
+  },
+
+  disclaimer:
+    "KEYOB is an independent technology provider. Any engagement is between you and KEYOB, and is separate from anything published or advised on this site.",
+
+  /** Compact card used on the home page, below the Business & AI pillar. */
+  banner: {
+    heading: "I write about business systems. KEYOB builds them.",
+    body: "Websites, AI assistants and automation for growing businesses — built by the team I refer people to, at a preferred client rate.",
+    cta: "See what’s included",
+  },
+
+  /**
+   * Two colourways of the same wordmark: white for the dark bands, navy for
+   * the cream ones. Supplied by KEYOB; do not recolour them.
+   */
+  logo: {
+    white: { src: "/media/partners/keyob-wordmark-white.png", width: 223, height: 47 },
+    navy: { src: "/media/partners/keyob-wordmark-navy.png", width: 219, height: 44 },
+    alt: "KEYOB",
+  },
+
+  partnerLabel: "In partnership with",
+};
+
+/* ------------------------------------------------------------------ */
 /* /about                                                              */
 /* ------------------------------------------------------------------ */
 
