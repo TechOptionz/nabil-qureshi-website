@@ -17,7 +17,10 @@ import { SiteFooter } from "@/components/sections/SiteFooter";
 import { SiteNav } from "@/components/sections/SiteNav";
 import { Speaking } from "@/components/sections/Speaking";
 import { Story } from "@/components/sections/Story";
-import { TechnologyPartnerBanner } from "@/components/sections/TechnologyPartner";
+import {
+  TechnologyPartner,
+  TechnologyPartnerBanner,
+} from "@/components/sections/TechnologyPartner";
 import { Testimonials } from "@/components/sections/Testimonials";
 
 /*
@@ -79,6 +82,7 @@ export default function Home() {
         <Speaking />
         <Testimonials />
         <Newsletter />
+        <TechnologyPartner />
         <Contact />
       </main>
 
