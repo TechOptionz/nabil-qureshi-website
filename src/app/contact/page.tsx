@@ -115,26 +115,46 @@ export default async function ContactPage(props: PageProps<"/contact">) {
                   Direct Advisory & Media Channels
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {contactPage.direct.items.map((item) => (
-                    <div
-                      key={item.label}
-                      className="flex flex-col gap-1 rounded-lg border border-cream-line bg-cream-deep p-4"
+                  <div className="flex flex-col gap-1 rounded-lg border border-cream-line bg-cream-deep p-4">
+                    <span className="text-caption text-ink-muted">
+                      {contactPage.direct.location.label}
+                    </span>
+                    <span className="font-medium text-ink">
+                      {contactPage.direct.location.value}
+                    </span>
+                  </div>
+
+                  <a
+                    href={contactPage.direct.linkedin.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${contactPage.direct.linkedin.cta} — opens in a new tab`}
+                    className="group flex items-center gap-3.5 rounded-lg border border-cream-line bg-white p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#0a66c2]/40 hover:shadow-[0_10px_28px_-14px_rgba(10,102,194,0.55)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0a66c2]"
+                  >
+                    <span
+                      aria-hidden
+                      className="grid size-11 shrink-0 place-items-center rounded-lg bg-[#0a66c2] text-white transition-transform duration-300 group-hover:scale-105"
                     >
-                      <span className="text-caption text-ink-muted">{item.label}</span>
-                      {item.href ? (
-                        <a
-                          href={item.href}
-                          target={item.href.startsWith("http") ? "_blank" : undefined}
-                          rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                          className="font-medium text-ink hover:text-gold-dark transition-colors"
-                        >
-                          {item.value}
-                        </a>
-                      ) : (
-                        <span className="font-medium text-ink">{item.value}</span>
-                      )}
-                    </div>
-                  ))}
+                      {/* Official LinkedIn glyph — single filled path, brand blue #0A66C2. */}
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                      </svg>
+                    </span>
+                    <span className="flex min-w-0 flex-col gap-0.5">
+                      <span className="text-caption text-ink-muted">
+                        {contactPage.direct.linkedin.label}
+                      </span>
+                      <span className="font-medium text-ink transition-colors group-hover:text-[#0a66c2]">
+                        {contactPage.direct.linkedin.name}
+                      </span>
+                      <span className="text-caption font-semibold text-[#0a66c2]">
+                        {contactPage.direct.linkedin.cta}
+                        <span aria-hidden className="ml-1 inline-block transition-transform duration-300 group-hover:translate-x-0.5">
+                          &rarr;
+                        </span>
+                      </span>
+                    </span>
+                  </a>
                 </div>
               </div>
             </Reveal>

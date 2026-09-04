@@ -31,23 +31,28 @@ export function SiteFooter() {
             <p className="mb-1 text-caption tracking-[0.18em] text-dim uppercase">
               {column.title}
             </p>
-            {column.links.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                /*
-                  rel="me" on an off-site profile is the link half of the
-                  `sameAs` in the Person schema: together they let a crawler
-                  confirm the profile and the site describe the same person,
-                  which is what an answer engine needs before it will
-                  attribute a claim. The `#` placeholders get nothing.
-                */
-                rel={link.href.startsWith("http") ? "me noopener" : undefined}
-                className="text-ui text-muted transition-colors hover:text-gold"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {column.links.map((link) => {
+              const external = link.href.startsWith("http");
+
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  /*
+                    rel="me" on an off-site profile is the link half of the
+                    `sameAs` in the Person schema: together they let a crawler
+                    confirm the profile and the site describe the same person,
+                    which is what an answer engine needs before it will
+                    attribute a claim. The `#` placeholders get nothing.
+                  */
+                  rel={external ? "me noopener noreferrer" : undefined}
+                  target={external ? "_blank" : undefined}
+                  className="text-ui text-muted transition-colors hover:text-gold"
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
         ))}
       </div>

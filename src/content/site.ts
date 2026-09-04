@@ -1188,12 +1188,12 @@ export const contactPage = {
 
   form: {
     /** Every control gets a real label; placeholders are never used as one. */
-    name: { label: "Name", placeholder: "Your name" },
-    email: { label: "Email", placeholder: "you@example.com" },
+    name: { label: "Name", placeholder: "Enter your name" },
+    email: { label: "Email", placeholder: "Enter your email" },
     company: {
       label: "Company",
       optional: "optional",
-      placeholder: "Your company",
+      placeholder: "Enter your company",
     },
     topic: { label: "Purpose of enquiry" },
     message: { label: "Message" },
@@ -1215,16 +1215,18 @@ export const contactPage = {
   },
 
   /**
-   * No contact details have been verified, so none are published. Each row is
-   * a visible placeholder until real values are supplied — see the note in the
-   * direct band of `src/app/contact/page.tsx`.
+   * No phone number or email address has been verified, so none is published.
+   * The enquiry form on the same page is the written channel, so it needs no
+   * row of its own here — see the direct band of `src/app/contact/page.tsx`.
    */
   direct: {
-    items: [
-      { label: "Location", value: "Brisbane & Sydney, Australia", href: null },
-      { label: "LinkedIn", value: "linkedin.com/in/nabil-q-a968bbb6", href: "https://www.linkedin.com/in/nabil-q-a968bbb6/" },
-      { label: "Enquiries", value: "Direct via advisory form below", href: "#enquiry" },
-    ],
+    location: { label: "Location", value: "Brisbane & Sydney, Australia" },
+    linkedin: {
+      label: "LinkedIn",
+      name: "Nabil Qureshi",
+      cta: "Connect on LinkedIn",
+      href: "https://www.linkedin.com/in/nabil-q-a968bbb6/",
+    },
   },
 
   meta: {
