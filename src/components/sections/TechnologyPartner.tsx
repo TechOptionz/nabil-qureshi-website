@@ -56,10 +56,8 @@ export function TechnologyPartner() {
     eyebrow,
     heading,
     lede,
-    system,
     capabilities,
     benefits,
-    steps,
     cta,
     disclaimer,
   } = technologyPartner;
@@ -97,33 +95,9 @@ export function TechnologyPartner() {
           </Reveal>
         </div>
 
-        {/* The three-part starting system */}
-        <div className="mt-14 grid gap-3.5 md:grid-cols-3">
-          {system.items.map((item, index) => (
-            <Reveal key={item.title} delay={index * 70}>
-              <div className="flex h-full flex-col gap-2.5 rounded-lg bg-ink-raised px-7 py-7">
-                <span className="text-caption font-semibold tracking-[0.14em] text-gold">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <h3 className="font-serif text-[19px] leading-snug text-heading">
-                  {item.title}
-                </h3>
-                <p className="text-copy-sm text-pretty text-muted">
-                  {item.body}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-        <Reveal delay={80}>
-          <p className="mt-4 text-copy-sm text-pretty text-ink-muted italic">
-            {system.note}
-          </p>
-        </Reveal>
-
         {/* Capabilities */}
         <Reveal delay={60}>
-          <ul className="mt-11 flex flex-wrap gap-2.5">
+          <ul className="mt-14 flex flex-wrap gap-2.5">
             {capabilities.map((capability) => (
               <li
                 key={capability}
@@ -156,37 +130,6 @@ export function TechnologyPartner() {
             </Reveal>
           ))}
         </div>
-
-        {/* How it runs */}
-        <ol className="mt-11 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((step, index) => {
-            const last = index === steps.length - 1;
-
-            return (
-              /* `as="li"` keeps the reveal wrapper from breaking the list. */
-              <Reveal
-                key={step}
-                as="li"
-                delay={index * 60}
-                className={`flex h-full flex-col items-center gap-2 rounded-lg px-5 py-5 text-center text-ui font-semibold ${
-                  last
-                    ? "bg-ink-raised text-heading"
-                    : "border border-cream-line bg-cream text-ink-text"
-                }`}
-              >
-                <span
-                  aria-hidden
-                  className={`text-caption font-semibold tracking-[0.12em] ${
-                    last ? "text-gold" : "text-gold-dark"
-                  }`}
-                >
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                {step}
-              </Reveal>
-            );
-          })}
-        </ol>
 
         {/* Close */}
         <Reveal delay={80} className="mt-11">

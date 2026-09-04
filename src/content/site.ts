@@ -438,25 +438,6 @@ export const technologyPartner = {
   heading: "I write about business systems. KEYOB builds them.",
   lede: "Most of what I cover here — automation, AI assistants, connected data — only pays off once someone actually builds it. KEYOB is an Australian software, AI and digital marketing team based in Springwood, and they are who I point people to for the delivery side of their business.",
 
-  /** KEYOB's three-part starting point, as they describe it. */
-  system: {
-    items: [
-      {
-        title: "Website",
-        body: "A site built to turn visitors into enquiries — not just to look tidy.",
-      },
-      {
-        title: "Aleesa.ai",
-        body: "An AI assistant that answers calls, emails and messages around the clock.",
-      },
-      {
-        title: "Connected CRM",
-        body: "One place where every lead and conversation is captured automatically.",
-      },
-    ],
-    note: "KEYOB call this the Digital Growth System — the foundation every client starts with.",
-  },
-
   capabilities: [
     "AI & Automation",
     "Custom Software",
@@ -487,8 +468,6 @@ export const technologyPartner = {
       body: "Clean, connected data means you and your accountant are always working from the same figures.",
     },
   ],
-
-  steps: ["Free chat", "They scope it", "They build it", "Ongoing support"],
 
   cta: {
     heading: "Ready to look at your systems?",
